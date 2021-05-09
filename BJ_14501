@@ -1,0 +1,41 @@
+import sys
+
+DEBUG=False
+def log(message):
+    if DEBUG:
+        print(message)
+
+num_op = int(sys.stdin.readline())
+
+w_time = []
+w_price = []
+for num in range(num_op):
+    t, p  = map(int, sys.stdin.readline().rstrip().split())
+    w_time.append(t)
+    w_price.append(p)
+
+log((w_time, w_price))
+w_time.append(10000)
+
+cache = dict()
+def p_np(num):
+
+    # 작업 시작일 + 작업 시간이 총날짜보다 작거나 같으면 재귀함수로 진입
+    if num + w_time[num] <= num_op:
+        ans = max(w_price[num] + p_np(num + w_time[num]), p_np(num+1))
+    # 그렇지 않으면, 일자를 하루 미루어 다시 탐색하거나
+    # 일자의 마지막에 도달하면 0을 리턴
+    else:
+        if num < num_op-1:
+            ans = p_np(num+1)
+        else:
+            ans = 0
+
+    # DP : cache에 값을 보관하고 있다가 반복 계산시 사용
+    if num not in cache:
+        cache[num] = ans
+
+    return cache[num]
+
+
+print(p_np(0))
