@@ -1,0 +1,22 @@
+import sys
+
+DEBUG=False
+def log(message):
+    if DEBUG:
+        print(message)
+
+num = int(sys.stdin.readline())
+hw_list = []
+for _ in range(num):
+    hw_list.append(tuple(map(int, sys.stdin.readline().rstrip().split())))
+
+# log((hw_list, sort_list))
+
+ans = dict()
+for nu in range(num):
+    count = 0
+    for nu2 in range(num):
+        if nu != nu2 and (hw_list[nu][0] < hw_list[nu2][0] and hw_list[nu][1] < hw_list[nu2][1]):
+            count += 1
+    sys.stdout.write("{} ".format(count+1))
+
