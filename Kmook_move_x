@@ -1,0 +1,24 @@
+import sys
+
+X, D = map(int, sys.stdin.readline().split())
+
+num_op = 0
+
+if X == D:
+    print(0)
+else:
+    while X != D :
+        if abs(X-D) > 3:
+            if X >D:
+                X -= 5
+            else :
+                X += 5
+        else:
+            if X >D:
+                X -= 1
+            else :
+                X += 1
+        num_op += 1
+    print(num_op)
+
+
