@@ -1,0 +1,37 @@
+import sys
+
+map_size, s_x, s_y, e_x, e_y = map(int, sys.stdin.readline().split())
+
+visited = [[s_x, s_y]]
+next_move_x = [s_x]
+next_move_y = [s_y]
+num_min = 0
+cont= True
+
+k_move = [[1,2],[2,1],[2,-1], [1,-2],[-1,-2],[-2,-1],[-2,1],[-1,2]]
+def knight_move(p_x, p_y):
+    for num in range(8):
+        next_x = p_x+k_move[num][0]
+        next_y = p_y+k_move[num][1]
+        if ([next_x, next_y] not in visited) and (next_x >= 0) and (next_y >= 0) and (next_x <= map_size-1) and (next_y <= map_size-1) :
+            visited.append([next_x, next_y])
+            next_move_x.append(next_x)
+            next_move_y.append(next_y)
+
+while cont:
+
+    if s_x == e_x and s_y == e_y:
+        print(0)
+        break
+    else:
+        num_min += 1
+
+    for _ in range(len(next_move_x)):
+
+        knight_move(next_move_x.pop(0), next_move_y.pop(0))
+        print(visited)
+        if [e_x, e_y] in visited:
+            print(num_min)
+            cont = False
+            break
+
