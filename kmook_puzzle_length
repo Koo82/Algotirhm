@@ -1,0 +1,39 @@
+import sys
+
+DEBUG=False
+def log(message):
+    if DEBUG:
+        print(message)
+
+map_size = int(sys.stdin.readline())
+map_t = []
+for _ in range(map_size):
+    map_t.append(list(map(int, sys.stdin.readline().rstrip().split())))
+
+log(("map_t:",map_t))
+log(("map_size", map_size))
+visited = []
+group_num = 0
+max_group_length = 0
+def group_search(x, y):
+    # for i in range(x-1,x+2,2):
+    #     for j in range(y-1, y+2, 2):
+    for i, j in [[x-1,y], [x+1,y], [x, y-1], [x,y+1]]:
+        if i>=0 and j>=0 and i<map_size and j<map_size and map_t[i][j] == 1 and ((i,j) not in visited):
+            visited.append((i,j))
+            log(visited)
+            group_search(i,j)
+
+
+for i in range(map_size):
+    for j in range(map_size):
+        old_visit_num = len(visited)
+        if map_t[i][j] == 1 and ((i, j) not in visited):
+            visited.append((i, j))
+            group_search(i, j)
+            group_num += 1
+            group_length = len(visited) - old_visit_num
+            if group_length > max_group_length:
+                max_group_length = group_length
+
+print(group_num, max_group_length)
