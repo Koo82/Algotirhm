@@ -1,0 +1,66 @@
+import sys
+import copy
+import time
+
+ny, nx = map(int, sys.stdin.readline().rstrip().split())
+# nx = 8; ny = 8
+# test = [[2, 0, 0, 0, 0, 0, 0,2],[2, 0, 0, 0, 0, 0, 0,2],[2, 0, 0, 0, 0, 0, 0,2],[2, 0, 0, 0, 0, 0, 0,2],[2, 0, 0, 0, 0, 0, 0,2],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]]
+# test = [[2,2,0],[0,0,0],[0,0,0]]
+test =[]
+for _ in range(ny):
+    test.append(list(map(int, sys.stdin.readline().rstrip().split())))
+dirty_p = 0
+ans = 0
+
+def virus_move(x, y, test_map):
+    global nx, ny, dirty_p
+    for tx, ty in [[-1, 0], [1, 0], [0, -1], [0, 1]]:
+        if x+tx>=0 and x+tx <nx and y+ty>=0 and y+ty<ny:
+            if test_map[y + ty][x + tx] == 0:
+                test_map[y + ty][x + tx] = 3
+                dirty_p += 1
+                virus_move(x+tx, y+ty, test_map)
+
+
+def virus_action(test_map):
+    global nx, ny, dirty_p, ans
+    for i in range(nx * ny):
+        x = i % nx
+        y = i // nx
+        if test_map[y][x] == 3:
+            virus_move(x, y, test_map)
+        if test_map[y][x] == 2:
+            dirty_p += 1
+            virus_move(x, y, test_map)
+        elif test_map[y][x] == 1:
+            dirty_p += 1
+
+    temp_ans = nx * ny - dirty_p
+    if temp_ans > ans:
+        ans = temp_ans
+    # print(test_map)
+
+def cal_move(start_num, depth):
+    global nx, ny, dirty_p
+    depth += 1
+    for i in range(start_num,nx*ny):
+        if test[i//nx][i%nx]:
+            continue
+        test[i // nx][i % nx] = 1
+
+        if depth < 3:
+            cal_move(i+1, depth)
+        else:
+            test_map = copy.deepcopy(test)
+            virus_action(test_map)
+        test[i // nx][i % nx] = 0
+
+        dirty_p = 0
+
+# before = time.time()
+cal_move(0,0)
+# after = time.time()
+
+sys.stdout.write(f"{ans}\n")
+# sys.stdout.write(f"{after-before}\n")
+
