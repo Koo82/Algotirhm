@@ -1,0 +1,47 @@
+import sys
+import copy
+
+DEBUG =True
+def log(message):
+    if DEBUG:
+        print(message)
+# n= 8
+ans =0
+n = int(sys.stdin.readline())
+
+# index: queen's location row
+# value: queen's location column
+queen_loc = [0]*(n+1)
+
+# log(queen_loc)
+
+
+def queen_match(row):
+    for c_row in range(1,row):
+        # row는 순차적으로 주어지므로 겹침없음
+        # column이 같거나, 대각선에 존재하면 queen 놓기 불가
+        if (queen_loc[row] == queen_loc[c_row]) or (abs(row-c_row) == abs(queen_loc[row] - queen_loc[c_row])):
+            return False
+    return True
+
+def move_marker(row):
+    global ans
+
+    for col in range(1, n + 1):
+        queen_loc[row] = col
+        # queen이 겹치지 않을 경우
+        if queen_match(row):
+            # row 가 n에 도달하면 정답
+            if row == n:
+                ans += 1
+            # 마지막 줄에 겹치지 않으면 row를 증가시켜 재귀
+            else:
+                move_marker(row+1)
+        # 퀸이 겹치면 상태 복구 후 다음 turn으로
+        else:
+            queen_loc[row] = 0
+
+move_marker(1)
+
+sys.stdout.write(f"{ans}\n")
+
