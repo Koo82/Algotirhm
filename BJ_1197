@@ -1,0 +1,57 @@
+import sys
+from math import inf
+import heapq
+
+class prim:
+    def __init__(self, num_node, adj_l):
+        self.num_node = num_node
+        self.distance = [inf for i in range(num_node+1)]
+        self.visited = [False for i in range(num_node+1)]
+        self.parent = [None for i in range(num_node+1)]
+        self.adj_l = adj_l
+        self.total_sum = 0
+        self.heap = []
+
+    def run(self, start_p):
+        # heapq.heappush(self.adj_l, (0, start_p))
+        self.visited[start_p] = True
+        self.parent[start_p] = start_p
+        self.distance[start_p] = 0
+
+        for candi in self.adj_l[start_p]:
+            heapq.heappush(self.heap, candi)
+
+        current_point = start_p
+        while self.heap:
+            dist, next_point = heapq.heappop(self.heap)
+            if not self.visited[next_point]:
+                self.visited[next_point] =True
+                self.parent[next_point] = current_point
+                self.distance[next_point] = dist
+                self.total_sum += dist
+
+                for candi in self.adj_l[next_point]:
+                    heapq.heappush(self.heap, candi)
+
+                current_point = next_point
+
+        return self.total_sum
+
+num_node, num_vert = map(int, sys.stdin.readline().rstrip().split())
+
+# num_node = int(sys.stdin.readline())
+# num_vert = int(sys.stdin.readline())
+
+adj_l = [[] for _ in range(num_node+1)]
+
+for i in range(num_vert):
+    node, node2, dist = map(int, sys.stdin.readline().rstrip().split())
+    adj_l[node].append( (dist,node2))
+    adj_l[node2].append((dist,node))
+
+prim_test = prim(num_node, adj_l)
+ans = prim_test.run(1)
+
+sys.stdout.write(f"{ans}\n")
+
+
