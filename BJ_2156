@@ -15,8 +15,8 @@ for i in range(0, word_len):
     if i == 0:
         dp_graph[i][1] = value
     else:
-        dp_graph[i][0] = max(dp_graph[i-1][2], dp_graph[i-1][0])
-        dp_graph[i][1] = max(dp_graph[i-1][1], dp_graph[i-1][0]+value)
+        dp_graph[i][0] = max(dp_graph[i-1][2], dp_graph[i-1][0], dp_graph[i-1][1])
+        dp_graph[i][1] = dp_graph[i-1][0]+value
         dp_graph[i][2] = dp_graph[i-1][1]+value
 
 sys.stdout.write(f'{max(dp_graph[word_len-1])}')
