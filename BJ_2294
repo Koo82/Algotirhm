@@ -1,0 +1,37 @@
+import sys
+from math import inf
+
+DEBUG = False
+def log(message):
+    if DEBUG:
+        print(message)
+
+num_coin, target = map(int, sys.stdin.readline().split())
+coin_arr=[]
+for _ in range(num_coin):
+    coin_arr.append(int(sys.stdin.readline()))
+
+log(coin_arr)
+
+coin_arr = list(reversed(sorted(list(set(coin_arr)))))
+log(coin_arr)
+ans = inf
+impo = False
+for i in range(len(coin_arr)):
+    temp = target
+    temp_ans = 0
+    impo = False
+    for j in range(i,len(coin_arr)):
+        temp_ans += temp // coin_arr[j]
+        temp = temp - coin_arr[j] * (temp // coin_arr[j])
+        if temp == 0:
+            break
+        elif j == (len(coin_arr)-1):
+            impo = True
+    if temp_ans < ans and not impo:
+        ans = temp_ans
+
+if ans == inf:
+    ans = -1
+
+sys.stdout.write(f"{ans}\n")
