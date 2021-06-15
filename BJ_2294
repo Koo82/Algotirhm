@@ -7,31 +7,31 @@ def log(message):
         print(message)
 
 num_coin, target = map(int, sys.stdin.readline().split())
-coin_arr=[]
+coin_arr = []
 for _ in range(num_coin):
     coin_arr.append(int(sys.stdin.readline()))
 
 log(coin_arr)
-
-coin_arr = list(reversed(sorted(list(set(coin_arr)))))
+coin_arr = sorted(list(set(coin_arr)))
 log(coin_arr)
-ans = inf
-impo = False
-for i in range(len(coin_arr)):
-    temp = target
-    temp_ans = 0
-    impo = False
-    for j in range(i,len(coin_arr)):
-        temp_ans += temp // coin_arr[j]
-        temp = temp - coin_arr[j] * (temp // coin_arr[j])
-        if temp == 0:
-            break
-        elif j == (len(coin_arr)-1):
-            impo = True
-    if temp_ans < ans and not impo:
-        ans = temp_ans
 
-if ans == inf:
+case_study=[0] + [inf for _ in range(target)]
+
+# 기본적으로 Dynamic Programming으로 푸는 문제
+# for문을 두번 사용하고, coin 종류에 따라 dp를 업데이트 하는 식으로 진행
+# 단 작은 코인부터 시작해서 사용되는 갯수를 모니터링하고, 더 작은 코인으로 해결 가능한 경우에는 업데이트
+for j in range(len(coin_arr)):
+    for i in range(1,target+1):
+        if i-coin_arr[j] >= 0:
+            current_value = case_study[i-coin_arr[j]] + 1
+            if current_value < case_study[i]:
+                case_study[i] = current_value
+
+log(case_study)
+# 모든 경우의 수에서 target을 만족하지 못한다면 -1 값을 도출할 수 있도록 처리
+if case_study[-1] == inf:
     ans = -1
+else:
+    ans = case_study[-1]
 
 sys.stdout.write(f"{ans}\n")
