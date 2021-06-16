@@ -1,0 +1,22 @@
+import sys
+
+num_stone = int(sys.stdin.readline())
+
+# 'False' means First user wins, 'SK'
+# 'True' means second user wins, 'CY'
+# when next turn i-1 or i-3 or i-4 is True means First user can win
+# else, i-1 or i-3 or i-4 is False means second user win, then 'CY' win
+# dp = [False, False, True, False, False]
+dp = [False, False, True, False, False] + [False] * (num_stone - 4)
+for i in range(5,num_stone+1):
+    if dp[i-1] or dp[i-3] or dp[i-4]:
+        # dp.append(False)
+        dp[i] = False
+    else:
+        # dp.append(True)
+        dp[i] = True
+print(dp)
+if dp[num_stone]:
+    sys.stdout.write("CY")
+else:
+    sys.stdout.write("SK")
