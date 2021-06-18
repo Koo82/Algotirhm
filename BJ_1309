@@ -1,0 +1,13 @@
+import sys
+
+num = int(sys.stdin.readline())
+dp = [0, 3, 7] + [0 for _ in range(num)]
+
+# 점화식 dp[i] = dp[i-1]*dp[1] - (dp[i-1]-dp[i-2])
+# 사자우리 n+1 줄은 n줄의 사자 우리와 1줄의 사자 우리 경우의 수 곱으로 연산되며, 다만 불가능한 경우를 제외해야 한다
+# 불가능한 경우는 1줄의 사자 우리와 맞닿는 n줄 맨위의 줄에 사자가 존재하는 경우이다. 
+# 따라서 n줄 맨위에 아무것도 없는 경우의 수 n-1줄의 경우의 수를 빼주면 n줄의 맨위의 줄에 사자가 없는 경우의 수를 추출해 낼 수 있다.
+for i in range(3, num+1):
+    dp[i] = dp[i-1] * dp[1] - (dp[i-1]-dp[i-2])
+    # print(dp[i])
+sys.stdout.write(f"{dp[num]}")
