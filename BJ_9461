@@ -1,0 +1,19 @@
+import sys
+
+DEBUG=True
+def log(message):
+    if DEBUG:
+        print(message)
+t_case = int(sys.stdin.readline())
+
+
+dp = [1,1,1,2,2] + [0 for _ in range(100)]
+
+for i in range(5, len(dp)):
+    dp[i] = dp[i-1] + dp[i-5]
+
+log(dp)
+
+for _ in range(t_case):
+    num = int(sys.stdin.readline())
+    sys.stdout.write(f"{dp[num-1]}\n")
