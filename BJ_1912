@@ -1,0 +1,25 @@
+import sys
+from math import inf
+
+DEBUG=True
+def log(message):
+    if DEBUG:
+        print(message)
+
+num = int(sys.stdin.readline())
+
+arr = list(map(int, sys.stdin.readline().rstrip().split()))
+
+log(arr)
+dp = [arr[0]] + [0 for _ in range(num-1)]
+max_n = -inf
+
+for i in range(num):
+    if i >0 :
+        dp[i] = dp[i-1]+arr[i]
+    if dp[i] > max_n:
+        max_n = dp[i]
+    if dp[i] < 0:
+        dp[i] = 0
+
+sys.stdout.write(f"{max_n}")
