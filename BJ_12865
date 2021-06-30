@@ -1,0 +1,30 @@
+import sys
+
+DEBUG=True
+def log(message):
+    if DEBUG:
+        print(message)
+
+num, limit = map(int, sys.stdin.readline().split())
+weight = [0 for _ in range(num+1)]
+value = [0 for _ in range(num+1)]
+# dp[i, j] 정의
+# i는 i번째 물건, j는 배낭의 최대 무게
+dp = [[0 for _ in range(limit+1)] for _ in range(num+1)]
+
+for i in range(1, num+1):
+        weight[i], value[i] = map(int, sys.stdin.readline().split())
+
+log(weight)
+log(value)
+log(dp)
+
+for i in range(1, num+1):
+    for j in range(1, limit+1):
+        if weight[i] > j:
+            dp[i][j] = dp[i-1][j]
+        else:
+            dp[i][j] = max(value[i]+dp[i-1][j-weight[i]], dp[i-1][j])
+
+
+sys.stdout.write(f"{dp[num][limit]}")
