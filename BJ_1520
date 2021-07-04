@@ -1,0 +1,37 @@
+import sys
+sys.setrecursionlimit(10 ** 7)
+DEBUG=True
+def log(message):
+    if DEBUG:
+        print(message)
+
+row, column = map(int, sys.stdin.readline().split())
+
+log((row, column))
+
+arr = [[0 for _ in range(column)] for _ in range(row)]
+dp = [[-1 for _ in range(column)] for _ in range(row)]
+xp = [-1,0,1,0]
+yp = [0,1,0,-1]
+
+for i in range(row):
+    arr[i] = list(map(int, sys.stdin.readline().rstrip().split()))
+
+log(arr)
+dp[0][0] = 1
+def dfs(x, y):
+
+    if dp[x][y] != -1:
+        return dp[x][y]
+
+    dp[x][y] = 0
+    for i in range(4):
+        x_move = x + xp[i]
+        y_move = y + yp[i]
+        if (x_move >= 0 and x_move<row and y_move >= 0 and y_move < column) and arr[x_move][y_move] > arr[x][y]:
+            dp[x][y] += dfs(x_move,y_move)
+
+    return dp[x][y]
+
+sys.stdout.write(f"{dfs(row-1, column-1)}")
+log(dp)
