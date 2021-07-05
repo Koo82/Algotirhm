@@ -1,0 +1,28 @@
+import sys
+
+DEBUG=True
+def log(message):
+    if DEBUG:
+        print(message)
+
+num_c = int(sys.stdin.readline())
+arr_c = list(map(int, sys.stdin.readline().rstrip().split()))
+
+log(arr_c)
+dp = set()
+dp.add(0)
+for i in range(num_c):
+    temp_dp = list(dp)
+    for j in range(len(temp_dp)):
+        dp.add(abs(temp_dp[j] + arr_c[i]))
+        dp.add(abs(temp_dp[j] - arr_c[i]))
+        log(dp)
+log(dp)
+
+num_q = int(sys.stdin.readline())
+arr_q = list(map(int, sys.stdin.readline().rstrip().split()))
+for k in range(num_q):
+    if arr_q[k] in dp:
+        sys.stdout.write("Y ")
+    else:
+        sys.stdout.write("N ")
