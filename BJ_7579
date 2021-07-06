@@ -1,0 +1,38 @@
+import sys
+
+DEBUG=True
+def log(message):
+    if DEBUG:
+        print(message)
+
+num, limit = map(int, sys.stdin.readline().split())
+arr = [0] + list(map(int, sys.stdin.readline().rstrip().split()))
+cost = [0] + list(map(int, sys.stdin.readline().rstrip().split()))
+result = sum(cost) + 1
+
+log((num, limit, arr, cost))
+
+# dp table with y : program, x: computer capacity
+dp =[[0] * result for _ in range(num+1)]
+
+for i in range(1, num+1):
+    p_cost = cost[i]
+    p_mem = arr[i]
+
+    for j in range(1, result):
+        if j < p_cost:
+            dp[i][j] = dp[i-1][j]
+        else:
+            dp[i][j] = max(p_mem + dp[i-1][j-p_cost], dp[i-1][j])
+
+        if dp[i][j] >= limit:
+            result = min(result, j)
+
+if limit != 0:
+    sys.stdout.write(f"{result}\n")
+else:
+    sys.stdout.write("0\n")
+
+
+
+
