@@ -1,0 +1,69 @@
+import sys
+from collections import deque
+DEBUG = False
+idx, idy = [0,1,0,-1], [1,0,-1,0]
+
+deq = deque()
+
+def log(message):
+    if DEBUG:
+        print(message)
+
+row, col = map(int, sys.stdin.readline().split())
+log((row, col))
+
+# map 받아서 저장 및 초기 위치값 산정
+map_t = [0 for i in range(row)]
+x, y = None, None
+for i in range(row):
+    map_t[i] = list(map(ord, sys.stdin.readline().rstrip()))
+    if x == None:
+        for j in range(col):
+            if map_t[i][j] == 48:
+                x, y = i, j
+                break
+
+log(map_t)
+log((x, y))
+
+# 'a':97, 'f':102
+# 'A':65, 'F':70
+# '#':35, '.':46
+# '0':48, '1':49
+
+def bfs(x,y):
+    deq.append((x,y,0,0))
+    # deq = deque([(x,y,0,0)])
+    # 같은 맵의 내부를 계속 순회하지 않도록 key의 상태에 따라 map을 방문했는지를 표현
+    Not_visited = [[[True] * (1 << 6) for _ in range(col)] for _ in range(row)]
+    Not_visited[x][y][0] = False
+    log(Not_visited)
+    # key = set()
+    while(len(deq)):
+        x_t, y_t, cost_t, key = deq.popleft()
+        log((x_t, y_t, cost_t, key))
+        if map_t[x_t][y_t] == 49:
+            return cost_t
+
+        for i in range(4):
+            nx, ny = x_t+idx[i], y_t+idy[i]
+            if (nx >=0) and (nx < row) and (ny >=0) and (ny<col) and Not_visited[nx][ny][key]:
+                if map_t[nx][ny] == 35:
+                    continue
+                elif map_t[nx][ny] >= 97 and map_t[nx][ny] <= 102:
+                    tmp_key = key | (1 << (map_t[nx][ny] - 97))
+                    Not_visited[nx][ny][tmp_key] = False
+                    deq.append((nx, ny, cost_t + 1, tmp_key))
+                    continue
+                elif map_t[nx][ny] >= 65 and map_t[nx][ny] <= 70:
+                    if not key & (1 << (map_t[nx][ny] - 65)):
+                        continue
+                Not_visited[nx][ny][key] = False
+                deq.append((nx, ny, cost_t+1, key))
+
+
+    return -1
+
+sys.stdout.write(f"{bfs(x,y)}\n")
+
+
