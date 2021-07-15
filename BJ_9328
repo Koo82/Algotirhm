@@ -1,0 +1,72 @@
+import sys
+from collections import deque
+
+DEBUG=True
+def log(message):
+    if DEBUG:
+        print(message)
+
+idx, idy = [0, 1, 0, -1], [1, 0, -1, 0]
+t_test = int(sys.stdin.readline())
+
+
+def bfs(i, j):
+    global key
+    count = 0
+    deq = deque()
+    deq.append((i, j))
+    door = [deque() for _ in range(26)]
+    map_v[i][j] = False
+    log(key)
+    while deq:
+        i_n, j_n = deq.popleft()
+
+        for k in range(4):
+            j_new = j_n + idx[k]
+            i_new = i_n + idy[k]
+
+            if (0 <= j_new < col+2) and (0 <= i_new < row+2) and (map_v[i_new][j_new]):
+                map_v[i_new][j_new] = False
+                if map_l[i_new][j_new] == '.':
+                    deq.append((i_new, j_new))
+                elif map_l[i_new][j_new] == '$':
+                    count += 1
+                    deq.append((i_new, j_new))
+                elif 'Z' >= map_l[i_new][j_new] >= 'A':
+                    log(map_l[i_new][j_new])
+                    alpha_num = ord(map_l[i_new][j_new])-ord('A')
+                    if key & (1 << alpha_num):
+                        deq.append((i_new, j_new))
+                        log((i_new, j_new))
+                    else:
+                        door[alpha_num].append((i_new, j_new))
+                elif 'z' >= map_l[i_new][j_new] >= 'a':
+                    log(map_l[i_new][j_new])
+                    alpha_num = ord(map_l[i_new][j_new]) - ord('a')
+                    key = key | (1 << alpha_num)
+                    deq.append((i_new, j_new))
+                    while door[alpha_num]:
+                        deq.append(door[alpha_num].popleft())
+
+    log(map_v)
+    log(key)
+    return count
+
+
+for _ in range(t_test):
+    row, col = map(int, sys.stdin.readline().split())
+
+    map_l = [['.'] * (col+2)] + [(['.']+list(sys.stdin.readline().rstrip())+['.']) for _ in range(row)] + [['.'] * (col+2)]
+    map_v = [[True] * (col+2) for _ in range(row+2)]
+
+    key = 0
+    for p_key in sys.stdin.readline().rstrip():
+        if p_key != '0':
+            key = key | (1 << (ord(p_key) - ord('a')))
+            log(p_key)
+
+    sys.stdout.write(f"{bfs(0,0)}\n")
+
+
+
+
