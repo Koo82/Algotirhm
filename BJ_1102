@@ -1,0 +1,50 @@
+import sys
+from math import inf
+
+DEBUG=True
+def log(message):
+    if DEBUG:
+        print(message)
+
+num_plant = int(sys.stdin.readline())
+
+# plant resume cost map
+prc_map = [list(map(int, sys.stdin.readline().rstrip().split())) for _ in range(num_plant)]
+log(prc_map)
+
+dp = [-1] * (1 << num_plant)
+# plant_status = [False] * num_plant
+visited = 0
+for num, plant in enumerate(sys.stdin.readline().strip()):
+    if plant == 'Y':
+        visited = visited | (1 << num)
+limit_num = int(sys.stdin.readline())
+
+# log(plant_status)
+log(visited)
+
+def dfs(visited):
+
+    count = 0
+    for k in range(num_plant):
+        if visited & (1 << k):
+            count += 1
+    if count >= limit_num:
+        return 0
+    if visited == 0:
+        return -1
+    if dp[visited] != -1:
+        return dp[visited]
+
+    dp[visited] = inf
+    for j in range(num_plant):
+        if visited & (1 << j):
+            for i in range(num_plant):
+                if visited & (1 << i) or j == i:
+                    continue
+                dp[visited] = min(dp[visited], dfs(visited | (1 << i)) + prc_map[j][i])
+    # if dp[x][visited] == inf:
+    #     dp[x][visited] = -1
+    return dp[visited]
+
+sys.stdout.write(f"{dfs(visited)}")
